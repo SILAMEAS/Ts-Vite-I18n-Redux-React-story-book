@@ -1,0 +1,20 @@
+{
+  "title": {
+    "Welcome to React": "Bienvenue à React et react-i18next",
+    "Welcome to React1": "Welcome to React and react-i18next",
+    "signature":"Signature",
+    "welcome to signature": "Bienvenue sur Signature",
+    "log into access": "Connectez-vous pour acceder a la plateforme",
+    "required": "Required",
+    "condition of us": "j'accepte les Conditions Generales d'Utilsation",
+    "validate": "valider"
+  },
+  "form": {
+    "email": "Adresse email",
+    "password": "Mot de passe",
+    "login": "Se connecter"
+  },
+  "folder": {
+    "new-folder": "Nouveau dossier"
+  }
+}
