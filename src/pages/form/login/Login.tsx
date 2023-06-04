@@ -8,24 +8,37 @@ import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import InputField from '@components/inputField/InputField';
-import {NavLink} from 'react-router-dom';
+import {NavLink, useNavigate} from 'react-router-dom';
 import {Localization} from '@/i18n/lan';
 import {useTranslation} from 'react-i18next';
+import {Constant} from '@/constant/Constant';
+import {login} from '@/utils/service/userService';
+import Alert from '@mui/material/Alert';
 export default function Login() {
   const {t} = useTranslation();
   const [check, setCheck] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [checkError, setCheckError] = React.useState(false);
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [checkError, setCheckError] = React.useState(true);
+  const [success, setSuccess] = React.useState(false);
+  const navigate = useNavigate();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
+    // console.log({
+    //   email: data.get('email'),
+    //   password: data.get('password'),
+    // });
+    const res = await login({
+      password: data.get('password') as string,
+      username: data.get('email') as string,
     });
+    res !== null && setSuccess(true);
+    success && navigate(Constant.HOME);
   };
-
+  React.useEffect(() => {
+    setCheckError(true);
+  }, [email, password]);
   return (
     <Grid container component="main" sx={{height: '100vh'}}>
       <CssBaseline />
@@ -47,13 +60,25 @@ export default function Login() {
             alignItems: 'flex-start',
             ml: '10%',
           }}>
-          <Grid container md={12} rowSpacing={15}>
+          <Alert
+            variant="filled"
+            severity="error"
+            sx={{
+              position: 'absolute',
+              left: 0,
+              top: 0,
+              display: success && checkError ? 'none' : 'flex',
+            }}>
+            Invalid username or password
+          </Alert>
+
+          <Grid container rowSpacing={15}>
             <Grid item md={12}>
               <Typography component="h6" variant="h5">
                 {t(Localization('title', 'signature'))}
               </Typography>
             </Grid>
-            <Grid item md={12} rowSpacing={2}>
+            <Grid item md={12}>
               <Typography component="h6" variant="h6" fontWeight={'bold'}>
                 {t(Localization('title', 'welcome to signature'))}
               </Typography>
@@ -67,7 +92,7 @@ export default function Login() {
             </Grid>
           </Grid>
           <Box component="form" noValidate onSubmit={handleSubmit} mt={'5%'}>
-            <Grid container md={12} rowSpacing={5}>
+            <Grid container rowSpacing={5}>
               <Grid item md={12}>
                 <InputField
                   setValue={setEmail}
@@ -102,25 +127,26 @@ export default function Login() {
               }
               label={t(Localization('title', 'condition of us'))}
             />
-            <NavLink to={'/dsf'}>
-              <Button
-                type={'submit'}
-                variant={'contained'}
-                // color={'buttonLogin'}
-                disabled={!check}
-                sx={{
-                  mt: 3,
-                  textTransform: 'none',
-                  mb: 2,
-                  width: '40%',
-                  fontWeight: 'bold',
-                }}
-                onClick={() => {
-                  setCheckError(true);
-                }}>
-                Valider
-              </Button>
-            </NavLink>
+            {/* <NavLink to={Constant.HOME}> */}
+            <Button
+              type={'submit'}
+              variant={'contained'}
+              // color={'buttonLogin'}
+              disabled={!check}
+              sx={{
+                mt: 3,
+                textTransform: 'none',
+                mb: 2,
+                width: '40%',
+                fontWeight: 'bold',
+              }}
+              // onClick={() => {
+              //   navigate(Constant.HOME);
+              // }}
+            >
+              Valider
+            </Button>
+            {/* </NavLink> */}
           </Box>
         </Box>
       </Grid>
