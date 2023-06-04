@@ -6,7 +6,7 @@ import {Provider} from 'react-redux';
 import {store} from '@/redux/store';
 
 function App() {
-  const [isDarkTheme, setIsDarkTheme] = React.useState(true);
+  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
   return (
     <ThemeProvider theme={isDarkTheme ? dark : light}>
       <Provider store={store}>
