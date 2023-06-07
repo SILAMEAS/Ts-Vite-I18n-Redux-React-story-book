@@ -12,8 +12,9 @@ import {NavLink, useNavigate} from 'react-router-dom';
 import {Localization} from '@/i18n/lan';
 import {useTranslation} from 'react-i18next';
 import {Constant} from '@/constant/Constant';
-import {login} from '@/utils/service/userService';
+
 import Alert from '@mui/material/Alert';
+import {userSevice} from '@/utils/service/users/user.service';
 export default function Login() {
   const {t} = useTranslation();
   const [check, setCheck] = React.useState(false);
@@ -25,16 +26,15 @@ export default function Login() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // console.log({
-    //   email: data.get('email'),
-    //   password: data.get('password'),
-    // });
-    const res = await login({
+    const res = await userSevice.login({
       password: data.get('password') as string,
       username: data.get('email') as string,
     });
-    res !== null && setSuccess(true);
-    success && navigate(Constant.HOME);
+    if (res !== null) {
+      localStorage.setItem('token', res.token);
+      setSuccess(true);
+      success && res.role === 'USER' && navigate(Constant.HOME);
+    }
   };
   React.useEffect(() => {
     setCheckError(true);
@@ -139,11 +139,7 @@ export default function Login() {
                 mb: 2,
                 width: '40%',
                 fontWeight: 'bold',
-              }}
-              // onClick={() => {
-              //   navigate(Constant.HOME);
-              // }}
-            >
+              }}>
               Valider
             </Button>
             {/* </NavLink> */}
